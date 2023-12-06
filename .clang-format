@@ -1,0 +1,20 @@
+# For formatting option documentation, see:
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html
+
+UseTab: Never
+IndentWidth: 2
+PointerAlignment: Left
+ColumnLimit: 100
+ReflowComments: true
+AllowShortFunctionsOnASingleLine: false
+SpacesInContainerLiterals: false
+BreakBeforeTernaryOperators: true
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterFunction: true
+IndentCaseLabels: true
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AlignEscapedNewlines: DontAlign
+IndentPPDirectives: BeforeHash
+BinPackArguments: false
+BinPackParameters: false
