@@ -3,6 +3,7 @@
  */
 
 #include "MKL25Z4.h"
+#include "accelerometer.h"
 #include "board.h"
 #include "clock_config.h"
 #include "fsl_debug_console.h"
@@ -23,6 +24,8 @@ int main(void)
   /* Init FSL debug console. */
   BOARD_InitDebugConsole();
 #endif
+
+  Accelerometer_Initialize();
 
   PRINTF("Hello World\r\n");
 
