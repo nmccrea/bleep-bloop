@@ -14,11 +14,8 @@
 
 #include "board.h"
 #include "fsl_common.h"
+#include "fsl_debug_console.h"
 #include <stdint.h>
-
-#if BOARD_FLASH_SIZE == 0
-  #warning "BOARD_FLASH_SIZE not set; using 0 as default value"
-#endif
 
 /**
  * @brief Set up and initialize all required blocks and functions related to the board hardware.
