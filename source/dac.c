@@ -5,10 +5,9 @@
 #include "dac.h"
 #include "MKL25Z4.h"
 #include "fsl_clock.h"
+#include "fsl_debug_console.h"
 #include "systick.h"
 #include <stdint.h>
-
-#include "fsl_debug_console.h"
 
 #define DAC_PORTE_OUTPUT_PIN (30U)
 #define DAC_PORTE_OUTPUT_PIN_MUX (0)
@@ -124,7 +123,25 @@ void DMA0_IRQHandler()
   // Disable further DMA requests until the DMA has been reset
   DMAMUX0->CHCFG[0] = 0;
 
-  // Clear the Done flag
+  // Check for DMA errors
+  uint32_t dma_status = DMA0->DMA[0].DSR_BCR;
+  if ((dma_status & DMA_DSR_BCR_CE(1)) != 0) {
+    PRINTF("DMA configuration error\r\n");
+    DMA0->DMA[0].DSR_BCR |= DMA_DSR_BCR_DONE(1);
+    return;
+  }
+  if ((dma_status & DMA_DSR_BCR_BES(1)) != 0) {
+    PRINTF("DMA bus source error\r\n");
+    DMA0->DMA[0].DSR_BCR |= DMA_DSR_BCR_DONE(1);
+    return;
+  }
+  if ((dma_status & DMA_DSR_BCR_BED(1)) != 0) {
+    PRINTF("DMA bus destination error\r\n");
+    DMA0->DMA[0].DSR_BCR |= DMA_DSR_BCR_DONE(1);
+    return;
+  }
+
+  // Clear the status and error bits and abort any ongoing transfer
   DMA0->DMA[0].DSR_BCR |= DMA_DSR_BCR_DONE(1);
 
   // Start the next DMA playback
