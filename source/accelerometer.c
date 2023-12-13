@@ -84,7 +84,7 @@ void Accelerometer_Read(AccelerometerData_t* data)
 
 void Accelerometer_PrintData(AccelerometerData_t* data)
 {
-  PRINTF("ACCELEROMETER: x: %d, y: %d, z: %d, magnitude: %d\r\n",
+  PRINTF("ACCELEROMETER: x: %d, y: %d, z: %d, magnitude: %u\r\n",
          data->x,
          data->y,
          data->z,
