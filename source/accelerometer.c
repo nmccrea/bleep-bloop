@@ -59,4 +59,5 @@ void Accelerometer_Read(AccelerometerData_t* data)
   data->x = (data_raw[0] << 8) | data_raw[1];
   data->y = (data_raw[2] << 8) | data_raw[3];
   data->z = (data_raw[4] << 8) | data_raw[5];
+  data->square_magnitude = (data->x * data->x) + (data->y * data->y) + (data->z * data->z);
 }
