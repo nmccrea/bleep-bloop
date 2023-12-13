@@ -8,6 +8,8 @@
 #include "systick.h"
 #include <stdint.h>
 
+#include "fsl_debug_console.h"
+
 #define DAC_PORTE_OUTPUT_PIN (30U)
 #define DAC_PORTE_OUTPUT_PIN_MUX (0)
 
@@ -79,6 +81,11 @@ void Dac_WaveformToSamples(int32_t (*waveform_function)(int32_t),
   uint16_t number_of_signal_periods = DAC_SAMPLE_BUFFER_CAPACITY / samples->sample_period;
   samples->length = number_of_signal_periods * samples->sample_period;
 
+  PRINTF("period: %u, number of periods: %u, length: %u\r\n",
+         samples->sample_period,
+         number_of_signal_periods,
+         samples->length);
+
   // With integer division, we must divide the waveform input value each time to avoid accumulating
   // error.
   int32_t numerator = 0;
@@ -100,8 +107,8 @@ void Dac_Play()
   DMA0->DMA[0].SAR = (uint32_t)source->buffer;
   DMA0->DMA[0].DAR = (uint32_t)(&(DAC0->DAT[0].DATL));
 
-  // Configure the number of bytes to transfer
-  DMA0->DMA[0].DSR_BCR = DMA_DSR_BCR_BCR(source->length);
+  // Configure the number of bytes to transfer (2 bytes per sample)
+  DMA0->DMA[0].DSR_BCR = DMA_DSR_BCR_BCR(source->length << 1);
 
   // Enable the DMA channel with TPM0 requests
   DMAMUX0->CHCFG[0] |=
