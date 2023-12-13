@@ -10,6 +10,8 @@
 // DAC sample frequency in Hz
 #define DAC_SAMPLE_FREQUENCY (96000U)
 #define DAC_SAMPLE_BUFFER_CAPACITY (1024)
+#define DAC_MAX_OUTPUT_FREQUENCY (20000) // Upper limit of human hearing
+#define DAC_MIN_OUTPUT_FREQUENCY (94)    // DAC_SAMPLE_FREQUENCY / DAC_SAMPLE_BUFFER_CAPACITY
 
 /** A DAC sample buffer and associated properties. */
 typedef struct {
@@ -34,7 +36,8 @@ void Dac_Initialize();
  * @param waveform_function The waveform function.
  * @param waveform_domain_period The fundamental period of the waveform in the function's input
  * units. That is, the non-negative input value at which the waveform function first repeats.
- * @param output_frequency The desired analog signal frequency in Hz.
+ * @param output_frequency The desired analog signal frequency in Hz. The output frequency will be
+ * coerced to be within the allowable range.
  * @param sample_offset An offset value that will be added to the output value of the waveform
  * function before writing to the sample buffer.
  * @param samples The DAC samples object into which the samples and metadata will be written.

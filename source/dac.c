@@ -73,6 +73,10 @@ void Dac_WaveformToSamples(int32_t (*waveform_function)(int32_t),
                            uint16_t sample_offset,
                            DacSamples_t* samples)
 {
+  // Coerce the output frequency to be within the allowable range
+  if (output_frequency > DAC_MAX_OUTPUT_FREQUENCY) output_frequency = DAC_MAX_OUTPUT_FREQUENCY;
+  if (output_frequency < DAC_MIN_OUTPUT_FREQUENCY) output_frequency = DAC_MIN_OUTPUT_FREQUENCY;
+
   samples->sample_period = (uint16_t)((uint32_t)DAC_SAMPLE_FREQUENCY / (uint32_t)output_frequency);
 
   // Here we utilize integer truncation. `samples->length` will be less than or equal to
@@ -102,6 +106,9 @@ void Dac_SetSource(DacSamples_t* samples)
 
 void Dac_Play()
 {
+  // If the DMA is already running, do nothing
+  if (DMA0->DMA[0].DSR_BCR & DMA_DSR_BCR_BSY_MASK) return;
+
   // Configure the source and destination addresses
   DMA0->DMA[0].SAR = (uint32_t)source->buffer;
   DMA0->DMA[0].DAR = (uint32_t)(&(DAC0->DAT[0].DATL));
@@ -123,7 +130,7 @@ void DMA0_IRQHandler()
   // Disable further DMA requests until the DMA has been reset
   DMAMUX0->CHCFG[0] = 0;
 
-  // Check for DMA errors
+  // Stop playback if there was an error
   uint32_t dma_status = DMA0->DMA[0].DSR_BCR;
   if ((dma_status & DMA_DSR_BCR_CE(1)) != 0) {
     PRINTF("DMA configuration error\r\n");
@@ -141,7 +148,7 @@ void DMA0_IRQHandler()
     return;
   }
 
-  // Clear the status and error bits and abort any ongoing transfer
+  // Clear the status and error bits
   DMA0->DMA[0].DSR_BCR |= DMA_DSR_BCR_DONE(1);
 
   // Start the next DMA playback
