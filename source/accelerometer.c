@@ -61,3 +61,12 @@ void Accelerometer_Read(AccelerometerData_t* data)
   data->z = (data_raw[4] << 8) | data_raw[5];
   data->square_magnitude = (data->x * data->x) + (data->y * data->y) + (data->z * data->z);
 }
+
+void Accelerometer_PrintData(AccelerometerData_t* data)
+{
+  PRINTF("ACCELEROMETER: x: %d, y: %d, z: %d, magnitude: %d\r\n",
+         data->x,
+         data->y,
+         data->z,
+         data->square_magnitude);
+}

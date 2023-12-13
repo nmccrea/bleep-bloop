@@ -36,10 +36,7 @@ int main(void)
   while (1) {
     next_tick_time += SYSTEM_PERIOD_MS;
     Accelerometer_Read(&accelerometer_data);
-    PRINTF("x: %d, y: %d, z: %d\r\n",
-           accelerometer_data.x,
-           accelerometer_data.y,
-           accelerometer_data.z);
+    Accelerometer_PrintData(&accelerometer_data);
     BusyWaitUntil(next_tick_time);
   }
 

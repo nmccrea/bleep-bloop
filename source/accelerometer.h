@@ -28,4 +28,9 @@ void Accelerometer_Initialize();
  */
 void Accelerometer_Read(AccelerometerData_t* data);
 
+/**
+ * @brief Prints the given accelerometer data to the debug console.
+ */
+void Accelerometer_PrintData(AccelerometerData_t* data);
+
 #endif
