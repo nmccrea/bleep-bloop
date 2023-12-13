@@ -9,8 +9,13 @@
 #include "fsl_clock.h"
 #include <stdint.h>
 
-// The elapsed time since system boot, in 64ths of a second.
-static volatile ticktime_t ticktime;
+// SysTick frequency shall be 256 Hz
+#define SYSTICK_FREQUENCY_SHIFT (8U)
+// SysTick frequency, in Hz
+#define SYSTICK_FREQUENCY (1U << SYSTICK_FREQUENCY_SHIFT)
+
+// The elapsed time since system boot, in 256ths of a second.
+static volatile uint32_t ticktime_raw;
 
 void SysTick_Initialize()
 {
@@ -33,12 +38,7 @@ void SysTick_Initialize()
 
 ticktime_t SysTick_Now()
 {
-  return ticktime;
-}
-
-uint32_t SysTick_NowMilliseconds()
-{
-  return (1000U * ticktime) >> SYSTICK_FREQUENCY_SHIFT;
+  return (1000U * ticktime_raw) >> SYSTICK_FREQUENCY_SHIFT;
 }
 
 /** The SysTick interrupt handler. */
@@ -47,7 +47,7 @@ void SysTick_Handler(void)
   uint32_t primask = __get_PRIMASK();
   __disable_irq();
 
-  ++ticktime;
+  ++ticktime_raw;
 
   __set_PRIMASK(primask);
 }
