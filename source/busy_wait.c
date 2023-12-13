@@ -2,9 +2,15 @@
 #include "systick.h"
 #include <stdint.h>
 
-void BusyWait(uint32_t milliseconds)
+void BusyWaitFor(uint32_t milliseconds)
 {
-  uint32_t end_time = SysTick_NowMilliseconds() + milliseconds;
-  while (SysTick_NowMilliseconds() < end_time)
+  uint32_t end_time = SysTick_Now() + milliseconds;
+  while (SysTick_Now() < end_time)
+    ;
+}
+
+void BusyWaitUntil(ticktime_t time_milliseconds)
+{
+  while (SysTick_Now() < time_milliseconds)
     ;
 }

@@ -12,6 +12,9 @@
 #include "pin_mux.h"
 #include "systick.h"
 
+// 50 ms period, or 20 Hz frequency
+#define SYSTEM_PERIOD_MS (50U)
+
 /**
  * @brief Application entry point.
  */
@@ -28,15 +31,16 @@ int main(void)
 
   PRINTF("Screamo started\r\n");
 
+  ticktime_t next_tick_time = SysTick_Now();
   AccelerometerData_t accelerometer_data;
-
   while (1) {
+    next_tick_time += SYSTEM_PERIOD_MS;
     Accelerometer_Read(&accelerometer_data);
     PRINTF("x: %d, y: %d, z: %d\r\n",
            accelerometer_data.x,
            accelerometer_data.y,
            accelerometer_data.z);
-    BusyWait(100);
+    BusyWaitUntil(next_tick_time);
   }
 
   return 0;
