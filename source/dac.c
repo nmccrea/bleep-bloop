@@ -84,11 +84,6 @@ void Dac_WaveformToSamples(int32_t (*waveform_function)(int32_t),
   uint16_t number_of_signal_periods = DAC_SAMPLE_BUFFER_CAPACITY / samples->sample_period;
   samples->length = number_of_signal_periods * samples->sample_period;
 
-  PRINTF("period: %u, number of periods: %u, length: %u\r\n",
-         samples->sample_period,
-         number_of_signal_periods,
-         samples->length);
-
   // With integer division, we must divide the waveform input value each time to avoid accumulating
   // error.
   int32_t numerator = 0;
