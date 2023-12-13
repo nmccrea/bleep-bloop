@@ -5,11 +5,12 @@
 #include "MKL25Z4.h"
 #include "accelerometer.h"
 #include "board.h"
+#include "busy_wait.h"
 #include "clock_config.h"
 #include "fsl_debug_console.h"
 #include "peripherals.h"
 #include "pin_mux.h"
-#include <stdio.h>
+#include "systick.h"
 
 /**
  * @brief Application entry point.
@@ -22,18 +23,21 @@ int main(void)
   BOARD_InitBootPeripherals();
   BOARD_InitDebugConsole();
 
+  SysTick_Initialize();
   Accelerometer_Initialize();
 
-  PRINTF("Hello World\r\n");
+  PRINTF("Screamo started\r\n");
 
-  /* Force the counter to be placed into memory. */
-  volatile static int i = 0;
-  /* Enter an infinite loop, just incrementing a counter. */
+  AccelerometerData_t accelerometer_data;
+
   while (1) {
-    i++;
-    /* 'Dummy' NOP to allow source level single stepping of
-        tight while() loop */
-    __asm volatile("nop");
+    Accelerometer_Read(&accelerometer_data);
+    PRINTF("x: %d, y: %d, z: %d\r\n",
+           accelerometer_data.x,
+           accelerometer_data.y,
+           accelerometer_data.z);
+    BusyWait(100);
   }
+
   return 0;
 }
