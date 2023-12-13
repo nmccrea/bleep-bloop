@@ -6,12 +6,11 @@
 #include "accelerometer.h"
 #include "MKL25Z4.h"
 #include "fsl_clock.h"
+#include "fsl_debug_console.h"
 #include "fsl_device_registers.h"
 #include "fsl_i2c.h"
 #include "fsl_port.h"
 #include <stdint.h>
-
-#include "fsl_debug_console.h"
 
 #define ACCELEROMETER_I2C_BAUD_RATE_BPS (300000U)
 #define ACCELEROMETER_PORTE_PIN_SDA (0)
@@ -20,6 +19,7 @@
 
 // AD0 pin low. If AD0 pin is held high, the address is 0x69.
 #define ACCELEROMETER_I2C_ADDRESS (0x68)
+#define ACCELEROMETER_FIRST_POWER_MANAGEMENT_REGISTER (0x6B)
 #define ACCELEROMETER_FIRST_DATA_REGISTER (0x3B)
 #define ACCELEROMETER_UNITS_PER_G (16384)
 
@@ -37,6 +37,26 @@ void Accelerometer_Initialize()
   const port_pin_config_t accelerometer_i2c_pin_config = {.mux = ACCELEROMETER_PORTE_PIN_MUX};
   PORT_SetPinConfig(PORTE, ACCELEROMETER_PORTE_PIN_SDA, &accelerometer_i2c_pin_config);
   PORT_SetPinConfig(PORTE, ACCELEROMETER_PORTE_PIN_SCL, &accelerometer_i2c_pin_config);
+
+  // Command the accelerometer to use cycle mode at 40 Hz
+  uint8_t power_management[2] = {
+      0x20, // Set PWR_MGMT_1 to cycle mode
+      0xC0, // Set PWR_MGMT_2 to 40 Hz cycling
+  };
+
+  i2c_master_transfer_t transfer = (i2c_master_transfer_t){
+      .slaveAddress = ACCELEROMETER_I2C_ADDRESS,
+      .direction = kI2C_Write,
+      .subaddress = ACCELEROMETER_FIRST_POWER_MANAGEMENT_REGISTER,
+      .subaddressSize = 1,
+      .data = power_management,
+      .dataSize = sizeof(power_management),
+  };
+
+  if (I2C_MasterTransferBlocking(I2C1, &transfer) != kStatus_Success) {
+    PRINTF("Accelerometer power management write failed\r\n");
+    return;
+  }
 }
 
 void Accelerometer_Read(AccelerometerData_t* data)
