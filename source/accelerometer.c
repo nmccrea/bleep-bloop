@@ -42,7 +42,7 @@ void Accelerometer_Initialize()
 void Accelerometer_Read(AccelerometerData_t* data)
 {
   uint8_t data_raw[6];
-  i2c_master_transfer_t transfer_array = {
+  i2c_master_transfer_t transfer = {
       .slaveAddress = ACCELEROMETER_I2C_ADDRESS,
       .direction = kI2C_Read,
       .subaddress = ACCELEROMETER_FIRST_DATA_REGISTER,
@@ -51,7 +51,7 @@ void Accelerometer_Read(AccelerometerData_t* data)
       .dataSize = 6,
   };
 
-  if (I2C_MasterTransferBlocking(I2C1, &transfer_array) != kStatus_Success) {
+  if (I2C_MasterTransferBlocking(I2C1, &transfer) != kStatus_Success) {
     PRINTF("Accelerometer read failed\r\n");
     return;
   }
