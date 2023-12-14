@@ -3,6 +3,7 @@
  */
 
 #include "waveform.h"
+#include "fp_trig.h"
 #include <stdint.h>
 
 int32_t Waveform_Square(int32_t x)
@@ -18,4 +19,9 @@ int32_t Waveform_Square(int32_t x)
     return -SQUARE_SCALE_FACTOR;
   else
     return SQUARE_SCALE_FACTOR;
+}
+
+int32_t Waveform_Sine(int32_t x)
+{
+  return fp_sin(x);
 }

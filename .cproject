@@ -282,7 +282,9 @@
 									<listOptionValue builtIn="false" value="--sort-section=alignment"/>
 									<listOptionValue builtIn="false" value="--cref"/>
 								</option>
-								<option id="gnu.c.link.option.userobjs.1422645970" name="Other objects" superClass="gnu.c.link.option.userobjs"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.link.option.userobjs.1422645970" name="Other objects" superClass="gnu.c.link.option.userobjs" valueType="userObjs">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/object/fp_trig.o}&quot;"/>
+								</option>
 								<option id="gnu.c.link.option.shared.558504830" name="Shared (-shared)" superClass="gnu.c.link.option.shared"/>
 								<option id="gnu.c.link.option.soname.1457041583" name="Shared object name (-Wl,-soname=)" superClass="gnu.c.link.option.soname"/>
 								<option id="gnu.c.link.option.implname.1559100173" name="Import Library name (-Wl,--out-implib=)" superClass="gnu.c.link.option.implname"/>
