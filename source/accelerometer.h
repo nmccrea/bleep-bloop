@@ -8,12 +8,19 @@
 
 #include <stdint.h>
 
+// The maximum magnitude of a 3-axis accelerometer vector
+//
+//  sqrt(3 * (32767^2))
+//
+// Where 32767 = (2^15)-1 is the maximum magnitude of an individual signed 16-bit axis reading
+#define ACCELEROMETER_MAX_MAGNITUDE (56754U)
+
 /** A 3-axis accelerometer reading in raw units.  */
 typedef struct {
   int16_t x;
   int16_t y;
   int16_t z;
-  uint32_t square_magnitude;
+  uint32_t magnitude;
 } AccelerometerData_t;
 
 /**

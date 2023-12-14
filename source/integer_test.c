@@ -2,6 +2,7 @@
  * @brief This file implements the test cases for the `Integer` API.
  */
 
+#include "accelerometer.h"
 #include "fsl_debug_console.h"
 #include "integer.h"
 
@@ -60,10 +61,10 @@ int IntegerTest()
   number_of_failures +=
       _IntegerTest_PerformTest((1864 * 1864) + (-376 * -376) + (15052 * 15052), 15171);
 
-  // Largest possible squared magnitude of a 16-bit signed three-axis vector
+  // Largest possible squared magnitude of a 16-bit signed three-axis vector produced by the
+  // accelerometer
   number_of_failures += _IntegerTest_PerformTest(
-      3 * (INTEGER_GREATEST_16_BIT_SIGNED_MAGNITUDE * INTEGER_GREATEST_16_BIT_SIGNED_MAGNITUDE),
-      56754);
+      ACCELEROMETER_MAX_MAGNITUDE * ACCELEROMETER_MAX_MAGNITUDE, ACCELEROMETER_MAX_MAGNITUDE);
 
   PRINTF("`Integer` API tests complete with %d failures\r\n", number_of_failures);
   return number_of_failures;

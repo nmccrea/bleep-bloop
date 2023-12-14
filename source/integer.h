@@ -7,8 +7,6 @@
 
 #include <stdint.h>
 
-#define INTEGER_GREATEST_16_BIT_SIGNED_MAGNITUDE ((2U << 14U) - 1U)
-
 /**
  * @brief Returns the square root of an unsigned integer.
  *
