@@ -45,35 +45,40 @@ int main(void)
   PRINTF("\r\n");
   PRINTF("Screamo started\r\n");
 
-  DacSamples_t dac_samples_a;
-  DacSamples_t dac_samples_b;
-  DacSamples_t* dac_samples_next = &dac_samples_a;
-
   const uint32_t magnitude_units_per_frequency_unit =
       ACCELEROMETER_MAX_MAGNITUDE / (SCREAMO_MAX_OUTPUT_FREQUENCY - SCREAMO_MIN_OUTPUT_FREQUENCY);
+  const uint32_t magnitude_threshold = (ACCELEROMETER_UNITS_PER_G * 10) / 8; // 1.2 Gs
 
+  DacSamples_t audio_buffer_a, audio_buffer_b;
+  DacSamples_t* audio_buffer_next = &audio_buffer_a;
   uint16_t frequency;
   ticktime_t next_tick_time = SysTick_Now();
   AccelerometerData_t accelerometer_data;
   while (1) {
-    next_tick_time += SYSTEM_PERIOD_MS;
-
     // Read the accelerometer data
     Accelerometer_Read(&accelerometer_data);
 
-    // Calculate the frequency to play
-    frequency = DAC_MIN_OUTPUT_FREQUENCY +
-                (accelerometer_data.magnitude / magnitude_units_per_frequency_unit);
+    if (accelerometer_data.magnitude < magnitude_threshold) {
+      // If the magnitude is below the threshold, don't play anything
+      Dac_Stop();
+    } else {
+      // Calculate the frequency to play
+      frequency = DAC_MIN_OUTPUT_FREQUENCY + ((accelerometer_data.magnitude - magnitude_threshold) /
+                                              magnitude_units_per_frequency_unit);
 
-    // Generate the next waveform
-    dac_samples_next = (dac_samples_next == &dac_samples_a) ? &dac_samples_b : &dac_samples_a;
-    Dac_WaveformToSamples(
-        Waveform_Square, SQUARE_DOMAIN_PERIOD, frequency, SQUARE_SCALE_FACTOR, dac_samples_next);
+      // Generate the next waveform
+      audio_buffer_next =
+          (audio_buffer_next == &audio_buffer_a) ? &audio_buffer_b : &audio_buffer_a;
+      Dac_WaveformToSamples(
+          Waveform_Square, SQUARE_DOMAIN_PERIOD, frequency, SQUARE_SCALE_FACTOR, audio_buffer_next);
 
-    // Play the next waveform
-    Dac_SetSource(dac_samples_next);
-    Dac_Play();
+      // Play the next waveform
+      Dac_SetSource(audio_buffer_next);
+      Dac_Play();
+    }
 
+    // Wait until the next tick
+    next_tick_time += SYSTEM_PERIOD_MS;
     BusyWaitUntil(next_tick_time);
   }
 

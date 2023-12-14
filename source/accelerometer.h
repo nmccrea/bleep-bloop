@@ -15,6 +15,8 @@
 // Where 32767 = (2^15)-1 is the maximum magnitude of an individual signed 16-bit axis reading
 #define ACCELEROMETER_MAX_MAGNITUDE (56754U)
 
+#define ACCELEROMETER_UNITS_PER_G (16384)
+
 /** A 3-axis accelerometer reading in raw units.  */
 typedef struct {
   int16_t x;
