@@ -10,7 +10,7 @@
 // DAC sample frequency in Hz
 #define DAC_SAMPLE_FREQUENCY (96000U)
 #define DAC_SAMPLE_BUFFER_CAPACITY (1024)
-#define DAC_MAX_OUTPUT_FREQUENCY (20000) // Upper limit of human hearing
+#define DAC_MAX_OUTPUT_FREQUENCY (48000)
 #define DAC_MIN_OUTPUT_FREQUENCY (94)    // DAC_SAMPLE_FREQUENCY / DAC_SAMPLE_BUFFER_CAPACITY
 
 /** A DAC sample buffer and associated properties. */
