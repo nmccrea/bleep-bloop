@@ -19,11 +19,11 @@
 // TPM prescale selection
 #define DAC_TPM_CLOCK_PRESCALE (0)
 
-// An idle signal sample buffer
-DacSamples_t idle_samples = {.buffer = {0}, .length = DAC_SAMPLE_BUFFER_CAPACITY};
+// An idle signal sample buffer that makes no sound
+DacSamples_t silence = {.buffer = {0}, .length = DAC_SAMPLE_BUFFER_CAPACITY};
 
 /** The current source of signal samples. */
-DacSamples_t* source = &idle_samples;
+DacSamples_t* source = &silence;
 
 void Dac_Initialize()
 {
@@ -114,6 +114,12 @@ void Dac_Play()
   // Enable the DMA channel with TPM0 requests
   DMAMUX0->CHCFG[0] |=
       (DMAMUX_CHCFG_ENBL(1) | DMAMUX_CHCFG_SOURCE(DMAMUX_CHCFG_SOURCE_TPM0_OVERFLOW));
+}
+
+void Dac_Stop()
+{
+  Dac_SetSource(&silence);
+  Dac_Play();
 }
 
 /**
