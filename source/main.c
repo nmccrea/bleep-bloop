@@ -16,10 +16,10 @@
 #include "waveform.h"
 
 // 50 ms period, or 20 Hz frequency
-#define SYSTEM_PERIOD_MS (50U)
+#define BLEEPBLOOP_LOOP_PERIOD_MS (50U)
 
-#define SCREAMO_MIN_OUTPUT_FREQUENCY (DAC_MIN_OUTPUT_FREQUENCY)
-#define SCREAMO_MAX_OUTPUT_FREQUENCY (2000)
+#define BLEEPBLOOP_MIN_OUTPUT_FREQUENCY (DAC_MIN_OUTPUT_FREQUENCY)
+#define BLEEPBLOOP_MAX_OUTPUT_FREQUENCY (2000)
 
 /**
  * @brief Runs the main application loop.
@@ -28,7 +28,8 @@ void Run()
 {
   // Precalculate constants for converting accelerometer magnitude to frequency
   const uint32_t magnitude_units_per_frequency_unit =
-      ACCELEROMETER_MAX_MAGNITUDE / (SCREAMO_MAX_OUTPUT_FREQUENCY - SCREAMO_MIN_OUTPUT_FREQUENCY);
+      ACCELEROMETER_MAX_MAGNITUDE /
+      (BLEEPBLOOP_MAX_OUTPUT_FREQUENCY - BLEEPBLOOP_MIN_OUTPUT_FREQUENCY);
   const uint32_t magnitude_threshold = (ACCELEROMETER_UNITS_PER_G * 10) / 8; // 1.2 Gs
 
   // Initialize variables
@@ -63,7 +64,7 @@ void Run()
     }
 
     // Wait until the next tick
-    next_tick_time += SYSTEM_PERIOD_MS;
+    next_tick_time += BLEEPBLOOP_LOOP_PERIOD_MS;
     BusyWaitUntil(next_tick_time);
   }
 }
@@ -90,7 +91,7 @@ int main(void)
   Accelerometer_Initialize();
 
   PRINTF("\r\n");
-  PRINTF("Screamo started\r\n");
+  PRINTF("Starting BleepBloop\r\n");
 
   Run();
 
