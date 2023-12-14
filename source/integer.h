@@ -7,13 +7,15 @@
 
 #include <stdint.h>
 
+#define INTEGER_GREATEST_16_BIT_SIGNED_MAGNITUDE ((2U << 14U) - 1U)
+
 /**
- * @brief Returns the square root of an integer.
+ * @brief Returns the square root of an unsigned integer.
  *
  * @param x The integer for which to take the square root.
  *
- * @returns The square root of x, or -1 if `x` is negative.
+ * @returns The square root of x.
  */
-int32_t Integer_SquareRoot(int32_t x);
+int32_t Integer_SquareRoot(uint32_t x);
 
 #endif
