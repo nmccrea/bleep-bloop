@@ -1,6 +1,6 @@
 # BleepBloop
 
-For this project, I constucted an embedded device that converts accelerometer readings into analog audio signals. The processor communicates with an MPU-6050 3-axis accelerometer over I2C, computes the magnitude of the resulting accelerometer vector, and generates audio waveforms whose frequencies are directly proportional to the acceleration magnitude. The waveform is then played out on a speaker using a digital-analog converter.
+For this project, I constructed an embedded device that converts accelerometer readings into analog audio signals. The processor communicates with an MPU-6050 3-axis accelerometer over I2C, computes the magnitude of the resulting accelerometer vector, and generates audio waveforms whose frequencies are directly proportional to the acceleration magnitude. The waveform is then played out on a speaker using a digital-analog converter.
 
 The audio output has a synthetic, computery, bleepy-bloopy sound to it, which inspired the project's name.
 
